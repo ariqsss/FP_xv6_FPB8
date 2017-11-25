@@ -61,46 +61,80 @@ ls(char *path,char *target,char *replace,int sensitive, int only_1,int option)
         printf(1, "ls: cannot stat %s\n", buf);
         continue;
       }
-      char temp[512];
+
+//Code start here
+
+/*
+Problem	:
+
+1. s//12/i -> solved
+2. s//12/g -> not solved yet
+3. s//12/gi -> not solved yet
+4. s//12/ -> not solved yet
+5. s/a// -> not solved yet
+6. s/a//g -> not solved yet
+
+*/
+
+     	char temp[512];
 	strcpy(temp,fmtname(buf));
-//      printf(1,"%s , with target : %s -> %s\n",temp,target,replace);
-      	char hold[512];
-	strcpy(hold,temp);
+	int len=0;
+	for (int i=0 ; temp[i]!=' ';++i){++len;}//finding len, cz here , temp will have ' ' till '\0'
+	temp[len]='\0';
+
+      	char hold[512]; //buat nyimpen nama file yg udah dirubah
+	char identifier[512]; //nyimpen apa kah char ke i sudah di check
+	strcpy(identifier,temp);
 	int benar=0,a,b;
+	int curr_i=0,index_str=0,k;
  	for (int i=0 ; i< strlen(temp); ++i){
-		int j=i,k=0; benar=0;
-		if (sensitive==1){//sensitive already correct
-			while (temp[j]!='\0'&&target[k]==temp[j]){
-				++k;++j;
-				if(target[k]=='\0'){benar++;i=j-1; break;} 
+		k=0;curr_i=i; curr_i+=1; curr_i-=1; benar=0;
+		if (sensitive && target[k]==temp[i]){ //kalau test sensitive (bukan i)
+			while(target[k]!='\0' && target[k]==temp[i]){
+				++k; ++i;
 			}
+			if(k==strlen(target)) {++benar;
+				  for(int j=curr_i; j<i;++j){
+                                identifier[j]='-'; //tandai identifier klo sudah divisit buat jaga2 replacementnya lebih pendek dari target
+					//biar ga numpuk , misal target akbar , replace noto . biar ga notor, kalau di algo ini yak
+                                }
+
+			}
+			else i=curr_i; //kalau ndak sesuai , balikin i nya biar bisa lanjut searching lanjutnya
 		}
-		else if (sensitive!=1){//not tested yet
+		else if (sensitive!=1){
 			a=(int)target[k];
-			b=(int)temp[j];
-			while (a==b||a-32==b||a+32==b){
-			++j;
-			if (target[k]=='\0') {benar++; break;}
-			a=(int)target[k];
-			b=(int)temp[j];
+			b=(int)temp[i]; //ascii, ez lah
+			while (target[k]!='\0'&& (a-32 == b || a+32 == b || a==b)){
+				++k;++i;
+				a++; b++;
+				a=(int)target[k]; b=(int)temp[i];
 			}
+			if (k==strlen(target)) {++benar;
+				for(int j=curr_i; j<i;++j){
+				identifier[j]='-';
+				}
+			}
+			else i=curr_i;
 		}
 
-		if (benar!=0){
-			if (only_1){//havent find a solution if the target is in the middle of the string
-			hold[0]='\0';
-			strcpy(hold,replace);
-			k=strlen(hold);
-				while(j<strlen(temp)){
-				hold[k++]=temp[j++];
-				}
-			 //copy temp nya nanti mulai dari j
-			break;
+		if (benar>0){ //klo ketemu brarti masukin replacementnya
+			for (int j=0 ;replace[j]!='\0'&& j<strlen(replace) ; ++j){
+			 hold[index_str++]=replace[j]; 
 			}
-			
+			if (only_1==1){while(temp[i]!='\0'){hold[index_str++]=temp[i++];} break;}
+			i=curr_i;
+		}
+		else {
+			if(identifier[i]!='-')hold[index_str++]=identifier[i]; //kalau bukan ya masukin char sekarang, misal akbar(r) jadi noto(r)
 		}
 	}//end of for
-	printf(1,"%s ->%s ->%s\n",fmtname(buf),target,hold);
+	hold[index_str]='\0';
+	printf(1,"%s ->%s\n",fmtname(buf),hold);
+
+	//move hold to de.name
+
+
     }//end of while
     break;
   }
@@ -156,23 +190,6 @@ else {
  }//end of else if (j!=1)
 
 ls(".",target,replace,sensitive,only_1,option);
-
-
-/* printf(1,"target : %s -> replace with : %s\n",target,replace);
- if (sensitive!=1){printf(1,"case not sensitive!\n");}
- else printf(1,"case sensitive!\n");
-
- if (only_1 != 1 ){printf(1,"all will be changed!\n");}
- else printf(1,"only the first one!\n");
-
- printf(1,"amount of option : %d\n",option);
-*/
-
-
-
-
-/*implement struct dirent here*/
-
 } //end of else if the argument exactly 2
 
 exit();
