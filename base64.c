@@ -66,10 +66,9 @@ int main(int argc, char *argv[]){
 			fgets(temp,100,in);
 			sprintf(input,"%s",temp);
 			while(fgets(temp,100,in)!=NULL){
-				sprintf(input,"%s\n%s",input,temp);
+				sprintf(input,"%s%s",input,temp);
 			}
 			fclose(in);
-			printf("%s\n",input );
 
 			printf("%s\n", b64_encode(input,strlen(input)));
 		}
