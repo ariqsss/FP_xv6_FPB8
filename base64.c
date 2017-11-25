@@ -19,7 +19,7 @@ char *b64_decode(const char *, int );
 int main(int argc, char *argv[]){
 	int i=1;
 	if(argc==2){
-		printf("%s\n", b64_encode(argv[i],strlen(argv[1])));
+		printf("%s\n", b64_encode(argv[i],strlen(argv[i])));
 
 		return 0;
 	}
@@ -30,7 +30,6 @@ int main(int argc, char *argv[]){
 			//inputan file
 		}
 		else{
-			printf("%s\n",argv[i] );
 			printf("%s\n",b64_decode(argv[i],strlen(argv[i])));
 		}
 	}
@@ -38,7 +37,7 @@ int main(int argc, char *argv[]){
 }
 
 char *b64_decode(const char *source, int len){
-	char temp[4];
+	char tmp[4];
 	int s_dec=(int)(len+3)/4;
 	s_dec*=3;
 	s_dec++;
@@ -50,56 +49,58 @@ char *b64_decode(const char *source, int len){
 		if(*source=='=') break;
 		if(!(isalnum(*source) || *source=='+' || *source=='/')) break;
 
-		temp[i++]=*(source++);
-	
+		tmp[i++]=*(source++);
+		
 		if(i==4){
-			for(a=0;a<4;a++)
-				for(b=0;b<64;b++)
-					if(temp[a]==b64_table[b]){
-						temp[a]=b;
+			for(a=0;a<4;a++){
+				for(b=0;b<64;b++){
+					if(tmp[a]==b64_table[b]){
+						tmp[a]=b;
 						break;
 					}
+				}
+			}
 
 			decode[x++]	=
-				(temp[0] << 2)
+				(tmp[0] << 2)
 				+
-				((temp[1] & 0x30 /*110000*/) >> 4);
+				((tmp[1] & 0x30 /*00110000*/) >> 4);
 			decode[x++]	=
-				((temp[1] & 0x0f /*001111*/) << 2)
+				((tmp[1] & 0x0f /*00001111*/) << 4)
 				+
-				((temp[2] & 0x3c /*111100*/) >> 4);
+				((tmp[2] & 0x3c /*00111100*/) >> 2);
 			decode[x++]	=
-				((temp[3] & 0x03 /*000011*/) << 4)
+				((tmp[2] & 0x03 /*00000011*/) << 6)
 				+
-				(temp[2]);
+				(tmp[3]);
 
 			i=0;
 		}
 
-		if(i>0){
-			for(j=i;j<4;j++)
-				temp[j]='\0';
+	}
+	if(i>0){
+		for(j=i;j<4;j++)
+			tmp[j]='\0';
 
-			for(a=0;a<4;a++)
-				for(b=0;b<64;b++)
-					if(temp[a]==b64_table[b]){
-						temp[a]=b;
-						break;
-					}
+		for(a=0;a<4;a++)
+			for(b=0;b<64;b++)
+				if(tmp[a]==b64_table[b]){
+					tmp[a]=b;
+					break;
+				}
 
-			decode[x++]	=
-				(temp[0] << 2)
-				+
-				((temp[1] & 0x30 /*110000*/) >> 4);
-			decode[x++]	=
-				((temp[1] & 0x0f /*001111*/) << 2)
-				+
-				((temp[2] & 0x3c /*111100*/) >> 4);
-			decode[x++]	=
-				((temp[3] & 0x03 /*000011*/) << 4)
-				+
-				(temp[2]);
-		}
+		decode[x++]	=
+			(tmp[0] << 2)
+			+
+			((tmp[1] & 0x30 /*00110000*/) >> 4);
+		decode[x++]	=
+			((tmp[1] & 0x0f /*00001111*/) << 4)
+			+
+			((tmp[2] & 0x3c /*00111100*/) >> 2);
+		decode[x++]	=
+			((tmp[2] & 0x03 /*00000011*/) << 6)
+			+
+			(tmp[3]);
 	}
 	decode[x]='\0';
 	return decode;
