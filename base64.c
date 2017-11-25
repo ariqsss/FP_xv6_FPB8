@@ -63,6 +63,8 @@ int main(int argc, char *argv[]){
 			int k=0;
 
 			FILE *in=fopen(argv[i],"r");
+			fgets(temp,100,in);
+			sprintf(input,"%s",temp);
 			while(fgets(temp,100,in)!=NULL){
 				sprintf(input,"%s\n%s",input,temp);
 			}
