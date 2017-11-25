@@ -71,8 +71,9 @@ Problem	:
 2. s//12/g -> not solved yet
 3. s//12/gi -> not solved yet
 4. s//12/ -> not solved yet
-5. s/a// -> not solved yet
-6. s/a//g -> not solved yet
+5. s/a// -> solved
+6. s/a//g -> solved
+7. s///gi -> solved
 
 */
 
@@ -94,8 +95,9 @@ Problem	:
 				++k; ++i;
 			}
 			if(k==strlen(target)) {++benar;
-				  for(int j=curr_i; j<i;++j){
-                                identifier[j]='-'; //tandai identifier klo sudah divisit buat jaga2 replacementnya lebih pendek dari target
+		  		for(int j=curr_i; j<i;++j){
+                                if (strlen(replace)==0){identifier[j]='0';}
+				else identifier[j]='-'; //tandai identifier klo sudah divisit buat jaga2 replacementnya lebih pendek dari target
 					//biar ga numpuk , misal target akbar , replace noto . biar ga notor, kalau di algo ini yak
                                 }
 
@@ -112,7 +114,8 @@ Problem	:
 			}
 			if (k==strlen(target)) {++benar;
 				for(int j=curr_i; j<i;++j){
-				identifier[j]='-';
+				if (strlen(replace)==0){identifier[j]='0';}
+				else identifier[j]='-';
 				}
 			}
 			else i=curr_i;
@@ -122,17 +125,30 @@ Problem	:
 			for (int j=0 ;replace[j]!='\0'&& j<strlen(replace) ; ++j){
 			 hold[index_str++]=replace[j]; 
 			}
+			if(strlen(replace)==0)for (int j=0; j<strlen(target) ; ++j) ++i; 
 			if (only_1==1){while(temp[i]!='\0'){hold[index_str++]=temp[i++];} break;}
 			i=curr_i;
 		}
-		else {
-			if(identifier[i]!='-')hold[index_str++]=identifier[i]; //kalau bukan ya masukin char sekarang, misal akbar(r) jadi noto(r)
-		}
+		if(identifier[i]!='-' && identifier[i]!='0')hold[index_str++]=identifier[i]; //kalau bukan ya masukin char sekarang, misal akbar(r) jadi noto(r)
+
 	}//end of for
 	hold[index_str]='\0';
-	printf(1,"%s ->%s\n",fmtname(buf),hold);
-
-	//move hold to de.name
+	
+//	len=(strlen(de.name)>strlen(hold))?strlen(de.name):strlen(hold);
+//	memmove(de.name,hold,len);
+//	printf(1,"%s -> %s\n",temp,hold);
+	if ((strlen(temp)!=0 && strlen(replace)!=0)&&hold[0]=='\0'){
+		printf(1,"Can't rename %s : No such file or directory\n",temp);
+		printf(1,"Program terminated!\n");
+		break;
+	}
+	if (strlen(replace) ==0 && strlen(target)==0) strcpy(hold,temp);
+	if (strcmp(temp,hold)!=0){
+	link(temp, hold);
+	unlink(temp);
+	}
+	//printf(1,"%s\%s ->%s\n",path,de.name ,hold);
+//	move hold to 
 
 
     }//end of while
@@ -188,9 +204,10 @@ else {
 		++i;
  	}//end of loop
  }//end of else if (j!=1)
-
 ls(".",target,replace,sensitive,only_1,option);
-} //end of else if the argument exactly 2
+printf(1,"%d of (%s)\n",strlen(replace),replace);
+}//end of else where argument exactly 2
+
 
 exit();
 }
