@@ -58,6 +58,11 @@ char *b64_encode(const char *source, int len){
 		encode[x++]	=b64_table[(temp[2] & 0x3f /*00111111*/)];
 	}
 
+	x-=3-i;
+	while(i++<3){
+		encode[x++]='=';
+	}
+
 	encode[x]='\0';
 
 	return encode;
