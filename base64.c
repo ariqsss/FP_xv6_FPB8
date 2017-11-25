@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <ctype.h>
 
 static const char b64_table[] = {
@@ -18,20 +19,62 @@ char *b64_decode(const char *, int );
 
 int main(int argc, char *argv[]){
 	int i=1;
+	char cwd[1024];
+	getcwd(cwd,sizeof(cwd));
 	if(argc==2){
 		printf("%s\n", b64_encode(argv[i],strlen(argv[i])));
-
-		return 0;
 	}
 	else
 	if(!strcmp(argv[i],"-d")){
 		i++;
-		if(!strcmp(argv[i],"-f")){
-			//inputan file
+		if(i<argc){
+			if(!strcmp(argv[i],"-f")){
+				i++;
+				if(i<argc){
+					sprintf(cwd,"%s/%s",cwd,argv[i]);
+
+					FILE *in=fopen(argv[i],"r");
+					char input[1000];
+					fgets(input,1000,in);
+					fclose(in);
+
+					printf("%s\n",b64_decode(input,strlen(input)));
+				}
+				else{
+					printf("Failed, no argument for open FILE\n");
+					return 0;
+				}
+			}
+			else{
+				printf("%s\n",b64_decode(argv[i],strlen(argv[i])));
+			}
 		}
 		else{
-			printf("%s\n",b64_decode(argv[i],strlen(argv[i])));
+			printf("Failed, no argument for decode\n");
+			return 0;
 		}
+	}
+	else
+	if(!strcmp(argv[i],"-f")){
+		i++;
+		if(i<argc){
+			char input[1000],temp[100];
+			sprintf(cwd,"%s/%s",cwd,argv[i]);
+			int k=0;
+
+			FILE *in=fopen(argv[i],"r");
+			while(fgets(temp,100,in)!=NULL){
+				sprintf(input,"%s\n%s",input,temp);
+			}
+			fclose(in);
+			printf("%s\n",input );
+
+			printf("%s\n", b64_encode(input,strlen(input)));
+		}
+	}
+	else{
+		printf("Failed...\n");
+		return 0;
 	}
 	return 0;
 }
