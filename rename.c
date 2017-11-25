@@ -64,11 +64,23 @@ ls(char *path,char *target,char *replace,int sensitive, int only_1,int option)
 
 //Code start here
 
+/*
+Problem	:
 
+1. s//12/i -> solved
+2. s//12/g -> not solved yet
+3. s//12/gi -> not solved yet
+4. s//12/ -> not solved yet
+5. s/a// -> not solved yet
+6. s/a//g -> not solved yet
+
+*/
 
      	char temp[512];
 	strcpy(temp,fmtname(buf));
-	temp[strlen(temp)]='\0'; //strlen nya salah. how?
+	int len=0;
+	for (int i=0 ; temp[i]!=' ';++i){++len;}//finding len, cz here , temp will have ' ' till '\0'
+	temp[len]='\0';
 
       	char hold[512]; //buat nyimpen nama file yg udah dirubah
 	char identifier[512]; //nyimpen apa kah char ke i sudah di check
@@ -118,7 +130,11 @@ ls(char *path,char *target,char *replace,int sensitive, int only_1,int option)
 		}
 	}//end of for
 	hold[index_str]='\0';
-	printf(1,"%s ->%s(%d)\n",fmtname(buf),hold,strlen(temp));
+	printf(1,"%s ->%s\n",fmtname(buf),hold);
+
+	//move hold to de.name
+
+
     }//end of while
     break;
   }
@@ -174,23 +190,6 @@ else {
  }//end of else if (j!=1)
 
 ls(".",target,replace,sensitive,only_1,option);
-
-
- printf(1,"target : %s -> replace with : %s\n",target,replace);
- if (sensitive!=1){printf(1,"case not sensitive!\n");}
- else printf(1,"case sensitive!\n");
-
- if (only_1 != 1 ){printf(1,"all will be changed!\n");}
- else printf(1,"only the first one!\n");
-
- printf(1,"amount of option : %d\n",option);
-
-
-
-
-
-/*implement struct dirent here*/
-
 } //end of else if the argument exactly 2
 
 exit();
