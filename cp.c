@@ -4,37 +4,37 @@
 #include "fs.h"
 #include "fcntl.h"
 
-char extension[5];
-char temp3[20][20];
-char globalargv2[100];
-char *fmtname(char *path)
+char extension[5];						///////////////////////////////////////////////////	
+char temp3[20][20];						////
+char globalargv2[100];						////
+int globalkhusus;						////
+char *fmtname(char *path)					////
+{								////
+  static char buf[DIRSIZ+1];					////	Fungsi Fmtname dan ls mengambil dari
+  char *p;							////	fungsi ls.c yg sudah ada dari sananya
+								////	lalu kita modifikasi untuk fungsi mv*
+  // Find first character after last slash.			////
+  for(p=path+strlen(path); p >= path && *p != '/'; p--)		////	kami menyediakan cp file ke file (copy dengan nama lain)
+    ;								////	file ke directory 
+  p++;								////	cp * = mengcopy  dengan wildcard
+								////
+  // Return blank-padded name.					////	cp -R = belum ada
+  if(strlen(p) >= DIRSIZ)					////
+    return p;							////
+  memmove(buf, p, strlen(p));					////
+  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));			////
+  return buf;							////
+}								////
+								////
+								////
+								////
+void ls(char *path)						/////////////////////////////////////////////////////
 {
-  static char buf[DIRSIZ+1];
-  char *p;
-
-  // Find first character after last slash.
-  for(p=path+strlen(path); p >= path && *p != '/'; p--)
-    ;
-  p++;
-
-  // Return blank-padded name.
-  if(strlen(p) >= DIRSIZ)
-    return p;
-  memmove(buf, p, strlen(p));
-  memset(buf+strlen(p), ' ', DIRSIZ-strlen(p));
-  return buf;
-}
-
-
-
-void ls(char *path)
-{
-  char lsargv2[100];
- strcpy(lsargv2,globalargv2);
-  char buf[512], *p;
-  char temp[50];
- // char lstemp[50];
-  int fd=0,fd2=0,j=0,i=0;
+  char lsargv2[512];// lsargv2 sebagai wadah dari argv2 untuk dimodif (argv2 disini merupakan directory) cth cp *.txt /ariqdir
+ strcpy(lsargv2,globalargv2);//ambil lsargv2 dari globalargv2 yaitu variabel global utk argv2 yg tidak berubah2
+  char buf[512], *p;		///buf dan p untuk mengambil nama2 file dan folder dr fmtname
+  char temp[512],stbuf[512];		///temp disini untuk wadah nama file yg diambil dgn fungsi ls
+  int n,fd=0,fd0=0,fd1=0,fd2=0,j=0,i=0,lenargv3=0;	//fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
   struct dirent de;
   struct stat st;
  
@@ -55,43 +55,50 @@ void ls(char *path)
 
 
 
-strcpy(buf, path);
+strcpy(buf, path);	
     p = buf+strlen(buf);
     *p++ = '/';
-    while(read(fd, &de, sizeof(de)) == sizeof(de)){
-      if(de.inum == 0)
+    while(read(fd, &de, sizeof(de)) == sizeof(de)){  //ambil tiap2 file dan folder seperti LS
+	if(de.inum == 0)
         continue;
       memmove(p, de.name, DIRSIZ);
       p[DIRSIZ] = 0;
-     // printf(1, "%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
-//  temp[1]=fmtname(buf);
-  strcpy(temp,fmtname(buf));
-	int templen=strlen(temp);
-	char lstemp[templen+1]; 
- //strcpy(lstemp,temp);
-   strcpy(lsargv2,globalargv2);
-  //printf(2,"%c\n",temp[1][2]);
+  strcpy(temp,fmtname(buf));   ////copy nama file / folder ke temp
+	int lenargv2=strlen(lsargv2);  ///lenargv2 = panjang lsargv2
+	int nullku=0,k=0;
+	for (k=0 ; temp[k]!=' ';++k){++nullku;}//finding len, cz here , temp will have ' ' till '\0'
+	temp[nullku]='\0';
+	k=0;
 
- int size = strlen(temp) + 1; //  If you don't know the source size.
+
+
+   strcpy(lsargv2,globalargv2); ///copy global argv2 ke lsargv2
+
+ int size = strlen(temp); 
  int size2 =strlen(extension); 
-  for(i=0;i<size;i++){
+  for(i=0;i<size;i++){    //////////For disini untuk mengecek apakah ekstensi nya sesuai dengan yang dikirim misal *.txt
 	while(temp[i]==extension[j]&&j<size2){
 			i++;j++;
 			if(j==size2){
-				if ( (fd2=open(lsargv2 , 0)) > 0 ){
+				if ( (fd2=open(lsargv2 , 0)) > 0 ){  ////jika sama dan ketemu kita open directory di argv2
 		 					fstat(fd2,&st);
-							strcpy(lstemp,temp);
-							if(st.type == T_DIR){
-							char dirku[1]="/";
-					        	 strcpy(lsargv2,globalargv2);
-							int lenargv2=strlen(lsargv2);
-							int lenlstemp=strlen(lstemp);
+							if(st.type == T_DIR){ ///jika benar directory
+							char dirku[1]="/"; ////tambah kan argv2 dengan / misalnya /ariqdir -> /ariqdir/
+							lenargv2=strlen(lsargv2);
         						memmove(lsargv2+lenargv2,dirku,sizeof(dirku));
 							lenargv2=strlen(lsargv2);
-							memmove(lsargv2+lenargv2,lstemp,lenlstemp);				
-							 printf(1,"argv1 = %s lsargv2 = %s globalargv2 = %s\n",lstemp , lsargv2, globalargv2);
-//      							  link(temp,lsargv2);
-//						       	 unlink(temp);
+							if(globalkhusus!=1){lenargv3=lenargv2;globalkhusus=1;} //lalu panjang dari /ariqdir/ kita simpan ke lenargv3, utk 1 kali saja jika tidak begini nanti error
+							memmove(lsargv2+lenargv3,temp,size);/// pindahkan nama file ke lsargv2 /ariqdir/ -> /ariqdir/namafile.txt
+							 printf(1,"argv1 = %s lsargv2 = %s globalargv2 = %s\n",temp , lsargv2, globalargv2); //pengecekan apakah yg dikirim benar
+      							 fd0=open(temp,O_RDONLY);
+						        fd1=open(lsargv2, O_CREATE|O_RDWR);
+      							  while ( (n= read(fd0,stbuf,sizeof(stbuf)))  >0 ){
+
+						        write(fd1,stbuf,n);
+       							 };
+        						 close(fd0);
+       							 close(fd1);
+
 							close(fd2);						
 									     }	
 
@@ -100,11 +107,13 @@ strcpy(buf, path);
 				
 			  }
 	}
-    i=0;j=0;
+    i=0;j=0;lenargv2=0;
     }
     
   close(fd);
 }
+
+
 
 
 
