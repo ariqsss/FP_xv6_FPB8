@@ -35,8 +35,17 @@ struct rtcdate now;
 	  if (i+1 < strlen(argv[1])) coba*=timer;
 	}
 
+int wadah=0; //wadah untuk selisih menit
+int temp; //wadah untuk jarak selisih detik yg dituju dgn sekarang
 if (date(&now)){ printf(2,"date failed\n"); exit();}
-while (now.second-r.second < coba){
+while (1){
+
+  
+ 	temp=now.second-r.second; // cek selisih detik
+	wadah=now.minute-r.minute; // lalu dijumlah dengan selisih menit * 60
+	temp=temp+wadah*60;
+if(temp == coba){ break;} // jika sudah = coba break
+
  if (date(&now)){
   exit();
  }
