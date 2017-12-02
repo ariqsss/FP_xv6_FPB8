@@ -68,9 +68,9 @@ ls(char *path,char *target,char *replace,int sensitive, int only_1,int option)
 Problem	:
 
 1. s//12/i -> solved
-2. s//12/g -> not solved yet
-3. s//12/gi -> not solved yet
-4. s//12/ -> not solved yet
+2. s//12/g ->  solved with consequences
+3. s//12/gi -> solved with consequences
+4. s//12/ ->  solved with consequences
 5. s/a// -> solved
 6. s/a//g -> solved
 7. s///gi -> solved
@@ -94,7 +94,7 @@ Problem	:
 			while(target[k]!='\0' && target[k]==temp[i]){
 				++k; ++i;
 			}
-			if(k==strlen(target)) {++benar;
+			if(strlen(target)&&k==strlen(target)) {++benar; //biar ketika 's//expr/' dia ga masuk
 		  		for(int j=curr_i; j<i;++j){
                                 if (strlen(replace)==0){identifier[j]='0';}
 				else identifier[j]='-'; //tandai identifier klo sudah divisit buat jaga2 replacementnya lebih pendek dari target
@@ -112,7 +112,7 @@ Problem	:
 				a++; b++;
 				a=(int)target[k]; b=(int)temp[i];
 			}
-			if (k==strlen(target)) {++benar;
+			if (strlen(target)&&k==strlen(target)) {++benar;
 				for(int j=curr_i; j<i;++j){
 				if (strlen(replace)==0){identifier[j]='0';}
 				else identifier[j]='-';
@@ -133,7 +133,31 @@ Problem	:
 
 	}//end of for
 	hold[index_str]='\0';
-	
+
+	if (strlen(target)==0){
+		hold[0]='\0';
+		index_str=0;
+		if (only_1==1){
+			for (int i=0; i<strlen(replace);++i){
+			 hold[index_str++]=replace[i];
+			}
+			for (int i=0; i<strlen(temp);++i){
+			hold[index_str++]=temp[i];
+			}
+		hold[index_str]='\0';
+		}
+		else{
+			for (int i=0;i<strlen(temp);++i){
+				for (int j=0; j<strlen(replace);++j){
+				hold[index_str++]=replace[j];
+				}
+				hold[index_str++]=temp[i];
+			}
+			for (int i=0; i<strlen(replace) ; ++i) hold[index_str++] = replace[i];
+			hold[index_str]='\0';
+		}
+
+	}
 //	len=(strlen(de.name)>strlen(hold))?strlen(de.name):strlen(hold);
 //	memmove(de.name,hold,len);
 //	printf(1,"%s -> %s\n",temp,hold);
@@ -204,6 +228,10 @@ else {
 		++i;
  	}//end of loop
  }//end of else if (j!=1)
+
+if (strlen(replace)==0)printf(1,"Replace is null,this will rename syscall. Thus, you can't call any syscall. (Y/N)");
+//porting here
+
 ls(".",target,replace,sensitive,only_1,option);
 printf(1,"%d of (%s)\n",strlen(replace),replace);
 }//end of else where argument exactly 2
