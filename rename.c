@@ -229,7 +229,7 @@ else {
  	}//end of loop
  }//end of else if (j!=1)
 
-if (strlen(replace)==0)printf(1,"Replace is null,this will rename syscall. Thus, you can't call any syscall. (Y/N)");
+//if (strlen(replace)==0)printf(1,"Replace is null,this will rename syscall. Thus, you can't call any syscall. (Y/N)");
 //porting here
 
 ls(".",target,replace,sensitive,only_1,option);
