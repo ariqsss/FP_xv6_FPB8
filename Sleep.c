@@ -10,7 +10,7 @@
 int main(int argc, char *argv[]){
 struct rtcdate r;
 
-if(date(&r)){
+if(Sleep(&r)){
  printf(2,"date failed\n");
  exit();
 }
@@ -56,14 +56,14 @@ if (decrement!=0){
 long long temp_time=0;
 temp_time+=r.second;
 int has_been_gone_x_second=0;
-if (date(&now)){ printf(2,"date failed\n"); exit();}
+if (Sleep(&now)){ printf(2,"date failed\n"); exit();}
 
 while (has_been_gone_x_second != coba){
 	if (now.second!=temp_time){ //when the second is changing
 	has_been_gone_x_second++; //increment clock
 	temp_time=now.second; //change the temp to now to check the 'next' now
 	}
- if (date(&now)){
+ if (Sleep(&now)){
   exit();
  }
 }
