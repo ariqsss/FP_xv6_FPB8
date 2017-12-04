@@ -19,7 +19,7 @@ int link(char*, char*);
 int mkdir(char*);
 int chdir(char*);
 int dup(int);
-int date(struct rtcdate*);
+int Sleep(struct rtcdate*);
 int getpid(void);
 char* sbrk(int);
 int sleep(int);

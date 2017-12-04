@@ -91,7 +91,7 @@ sys_uptime(void)
 }
 
 
-int sys_date(void){
+int sys_Sleep(void){
  struct rtcdate* date;
  argptr(0, (void*)(&date),sizeof(*date));
  cmostime(date);
