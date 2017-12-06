@@ -36,7 +36,7 @@ void ls(char *path)						/////////////////////////////////////////////////////
   strcpy(lsargv2,globalargv2);//ambil lsargv2 dari globalargv2 yaitu variabel global utk argv2 yg tidak berubah2
   char buf[512], *p;		///buf dan p untuk mengambil nama2 file dan folder dr fmtname
   char temp[512],stbuf[512];		///temp disini untuk wadah nama file yg diambil dgn fungsi ls
-  int n,fd=0,fd0=0,fd1=0,fd2=0,j=0,i=0,lenargv3=0;	//fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
+  int n,fd=0,fd0=0,fd1=0,fd2=0,j=0,i=0;//,lenargv3=0;	//fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
   struct dirent de;
   struct stat st;
  
@@ -66,7 +66,6 @@ void ls(char *path)						/////////////////////////////////////////////////////
   	memmove(p, de.name, DIRSIZ);
         p[DIRSIZ] = 0;
   	strcpy(temp,fmtname(buf));   ////copy nama file / folder ke temp
-	int lenargv2=strlen(lsargv2);  ///lenargv2 = panjang lsargv2
 	int nullku=0,k=0;
 	for (k=0 ; temp[k]!=' ';++k){++nullku;}//finding len, cz here , temp will have ' ' till '\0'
 	temp[nullku]='\0';
@@ -85,29 +84,24 @@ void ls(char *path)						/////////////////////////////////////////////////////
 					if ( (fd2=open(lsargv2 , 0)) > 0 ){  ////jika sama dan ketemu kita open directory di argv2
 		 					fstat(fd2,&st);
 							if(st.type == T_DIR){ ///jika benar directory
-							char dirku[1]="/"; ////tambah kan argv2 dengan / misalnya /ariqdir -> /ariqdir/
-							lenargv2=strlen(lsargv2);
-        						memmove(lsargv2+lenargv2,dirku,sizeof(dirku));
-							lenargv2=strlen(lsargv2);
-								if(globalkhusus!=1){lenargv3=lenargv2;globalkhusus=1;} //lalu panjang dari /ariqdir/ kita simpan ke lenargv3, utk 1 kali saja jika tidak begini nanti error
-							memmove(lsargv2+lenargv3,temp,size);/// pindahkan nama file ke lsargv2 /ariqdir/ -> /ariqdir/namafile.txt
-							printf(1,"argv1 = %s lsargv2 = %s globalargv2 = %s\n",temp , lsargv2, globalargv2); //pengecekan apakah yg dikirim benar
       							fd0=open(temp,O_RDONLY);
-						        fd1=open(lsargv2, O_CREATE|O_RDWR);
+							chdir(globalargv2);
+						        fd1=open(temp, O_CREATE|O_RDWR);
       							  while ( (n= read(fd0,stbuf,sizeof(stbuf)))  >0 ){
 
 						        	write(fd1,stbuf,n);
        							 	};
         						close(fd0);
        							close(fd1);
-							close(fd2);						
+							close(fd2);				
+							chdir(path);		
 							}	
 
 						}
 			           	}	
 				  }
 		}
-    i=0;j=0;lenargv2=0;
+    i=0;j=0;
     }
 
   close(fd);
@@ -172,13 +166,13 @@ void recursive(char *path){
 
 }
 int main (int argc, char *argv[]){
-  char wadahargv1[30]; //wadah untuk argv1
+  char wadahargv1[70]; //wadah untuk argv1
   char wadahargv2[50];//wadah untuk argv2
   	strcpy(wadahargv1,argv[1]);
   	strcpy(wadahargv2,argv[2]);
  	strcpy(globalargv2,argv[2]);//global argv2 yaitu argv2 untuk dipass ke fungsi ls
   	strcpy(globalargv3,argv[3]);
-	strcpy(globalargv1,argv[1]);
+//	strcpy(globalargv1,argv[1]);
   int n,fd1=0,fd0=0,fd,len=strlen(argv[1]),i=0,j=0;
   int len2=len;
  	 strcpy(temp3[1],argv[2]);
@@ -191,13 +185,15 @@ int main (int argc, char *argv[]){
     exit();
   }
   for(i=0;i<len;i++){ //mengecek apakah ada wildcard (*)
+	if(argv[1][i]!='*') { globalargv1[i]=argv[1][i]; }
 	if(argv[1][i]=='*'){
+	globalargv1[i-1]='\0';
         i++;
         for(i=i;i<len;i++){
 	extension[j]=argv[1][i];
 	j++;
 	}
-	ls(".");
+	ls(globalargv1);
 	exit();}
 
 
