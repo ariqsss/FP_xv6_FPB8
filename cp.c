@@ -108,14 +108,27 @@ void ls(char *path)						/////////////////////////////////////////////////////
 }
 
 
-void recursive(char *path){
+void recursive(char path[],char target[]){
 
 	printf(1,"Masuk rekursi0\n");
- 	char buf[512], *p;            ///buf dan p untuk mengambil nama2 file dan folder dr fmtname
+ 	char stbuf[512],buf[512], *p;            ///buf dan p untuk mengambil nama2 file dan folder dr fmtname
   	char temp[512];//0,stbuf[512];            ///temp disini untuk wadah nama file yg diambil dgn fungsi ls
-  	int fd=0;      //fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
+  	int fd=0,fd0=0,fd1=0,n=0;      //fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
   	struct dirent de;
   	struct stat st;
+
+	char current_target[512];
+	strcpy(current_target,target);
+	int ctlen=strlen(current_target);
+	
+	int slashcount=0;
+	printf(1,"path adalah %s \n",path);
+	for(int i=0;i<strlen(path);i++){
+		if(path[i]=='/')slashcount++;
+		printf(1,"%d\n",slashcount);
+		}
+
+
 
 	printf(1,"Masuk rekursi1\n");
         if((fd = open(path, 0)) < 0){
@@ -156,10 +169,38 @@ void recursive(char *path){
 		 	t_len=0;
 			for (int i=0; temp[i]!=' ';++i) ++t_len;
 			temp[t_len]='\0';
-			recursive(temp);
+		//	chdir(target);printf(1,"berhasil chdir target\n");
+			current_target[ctlen++]='/';
+			for(int i=0;i<strlen(path);++i){current_target[ctlen++]=temp[i];}
+			current_target[ctlen++]='\0';
+			printf(1,"%s",current_target);
+ 		//	mkdir("/dira/dir2");printf(1,"berhasil mkdir dlm target\n");
+			for(int i=0;i<slashcount;i++)chdir("..");
+			mkdir(current_target);
+			recursive(temp,current_target);
 			chdir("..");
 			printf(1,"Keluar dari dir -> %s\n",fmtname(buf));
   		}
+		else{	printf(1,"masuk file\n");
+			fd0=open(temp,O_RDONLY);
+                        chdir(target);
+
+			fd1=open(temp, O_CREATE|O_RDWR);
+                        while ( (n= read(fd0,stbuf,sizeof(stbuf)))  >0 ){
+
+                        write(fd1,stbuf,n);
+                        };
+                        close(fd1);
+			chdir("..");
+			close(fd0);
+                                                       
+
+
+
+
+
+
+		}
 	} 
 	} //end while
  close(fd);
@@ -180,7 +221,7 @@ int main (int argc, char *argv[]){
   char namafile[20][len2];
   char namafile2[20][len];
   char buf[512];
-  if (argc != 3){ //jika arg bkn 3
+  if (argc < 3||argc > 4){ //jika arg bkn 3
     printf(2, "Usage: mv oldname newname\n");
     exit();
   }
@@ -204,7 +245,7 @@ int main (int argc, char *argv[]){
 		
 	
 
-	recursive(globalargv2);
+	recursive(globalargv2,globalargv3);
 	exit();
 
 
