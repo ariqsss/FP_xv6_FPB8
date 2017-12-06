@@ -105,31 +105,23 @@ void ls(char *path)						/////////////////////////////////////////////////////
 
 						}
 			           	}	
-				
 				  }
 		}
     i=0;j=0;lenargv2=0;
     }
-    
+
   close(fd);
 }
 
 
-void recursive(char path[], char current[]){
+void recursive(char *path){
 
 	printf(1,"Masuk rekursi0\n");
  	char buf[512], *p;            ///buf dan p untuk mengambil nama2 file dan folder dr fmtname
   	char temp[512];//0,stbuf[512];            ///temp disini untuk wadah nama file yg diambil dgn fungsi ls
-  	int fd=0,fd2=0;      //fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
+  	int fd=0;      //fd disini merupakan filedescriptor jika kita meng open sebuah file, lenargv3 merupakan panjang dari argv2 yg sudah diberi "/"
   	struct dirent de;
   	struct stat st;
- 	char current_temp[512];
-	strcpy(current_temp,current);
-	int c_temp= strlen(current_temp);
-	for (int i=0; i<strlen(path) ; ++i){
-	current_temp[c_temp++] = path[i];
-	}current_temp[c_temp++]='/';
-	current_temp[c_temp]='\0';
 
 	printf(1,"Masuk rekursi1\n");
         if((fd = open(path, 0)) < 0){
@@ -145,45 +137,38 @@ void recursive(char path[], char current[]){
 
 
 	printf(1,"masuk recursi2\n");
-
-
-
-        strcpy(buf, path);      
-        p = buf+strlen(buf);
-        *p++ = '/';
-        while(read(fd, &de, sizeof(de)) == sizeof(de)){  //ambil tiap2 file dan folder seperti LS
-        if(de.inum == 0)
-        continue;
-        memmove(p, de.name, DIRSIZ);
-        p[DIRSIZ] = 0;
-        strcpy(temp,fmtname(buf));
+	  strcpy(buf, path);
+   	 p = buf+strlen(buf);
+    	*p++ = '/';
+         while(read(fd, &de, sizeof(de)) == sizeof(de)){
+     	 if(de.inum == 0)
+       	 continue;
+     	 memmove(p, de.name, DIRSIZ);
+      	 p[DIRSIZ] = 0;
+      	 if(stat(buf, &st) < 0){
+         printf(1, "ls: cannot stat %s\n", buf);
+         continue;
+     	 }
+     	 printf(1, "%s %d %d %d\n", fmtname(buf), st.type, st.ino, st.size);
+ 	strcpy(temp,fmtname(buf));
 	int t_len=0;
-	for (int i=0; temp[i]!=' '; ++i) ++t_len;
-	temp[t_len]='\0';
-	char tt[512];
-	int tt_len=0;
-	for (int i=0 ; i<c_temp ; ++i){
-		tt[tt_len++] = current_temp[i];
-	}
-	//int t_len = strlen(tt);
-	for (int i=0; i<strlen(temp);++i){
-	tt[tt_len++]=temp[i];
-	}tt[tt_len]=0;
-	temp[t_len]=0;
-	current_temp[c_temp]=0;
-   	printf(1,"%s + %s -> %s-\n",temp,current_temp,tt);
-	if ((strlen(temp)==2 && temp[0]=='.' && temp[1]=='.') ||(strlen(temp)==1 && temp[0]=='.')) continue;
-	if ( (fd2=open(tt , 0)) > 0 ){  ////jika sama dan ketemu kita open directory di argv2
-                  fstat(fd2,&st);
-                  if(st.type == T_DIR){
-			close(fd2);
-			printf(1,"In recursion\n");
-			recursive(temp,current_temp);
-			printf(1,"out recursion\n");
-		}
-	    }
-
-	}
+	for (int i=0; temp[i]!=' '; ++i) ++t_len; temp[t_len]='\0';
+	if ((strlen(temp)==1 && temp[0]=='.') || (strlen(temp)==2 && temp[0]=='.' && temp[1]=='.')) continue;
+	else{
+		if (st.type==1){
+			chdir(path);
+			printf(1,"Masuk ke ->  %s\n",fmtname(buf));
+			strcpy(temp,fmtname(buf));
+		 	t_len=0;
+			for (int i=0; temp[i]!=' ';++i) ++t_len;
+			temp[t_len]='\0';
+			recursive(temp);
+			chdir("..");
+			printf(1,"Keluar dari dir -> %s\n",fmtname(buf));
+  		}
+	} 
+	} //end while
+ close(fd);
 
 }
 int main (int argc, char *argv[]){
@@ -223,7 +208,7 @@ int main (int argc, char *argv[]){
 		
 	
 
-	recursive(globalargv2,"./");
+	recursive(globalargv2);
 	exit();
 
 
