@@ -225,7 +225,52 @@ void run_interactive(void)
 
   while (getcmd(buf, sizeof(buf),path) >= 0){
 
-  process_line(buf);    
+    if(buf[0]=='c'&&buf[1]=='d'){
+      struct execcmd *ecmd = (struct execcmd*) parsecmd(buf);
+      if(ecmd->argv[1]!=NULL){
+        if(ecmd->argv[1][0]=='.'){
+            if(ecmd->argv[1]){
+              if(strcmp(ecmd->argv[1],"..")==0){
+                int level=counting(path,strlen(path),'/');
+                if(level>0){
+                  //ganti path (cd ..)
+                  pathback(path);
+                  chdir("..");
+                }else{
+                  printf("Current directory is directory root\n");
+                }
+              }else{
+                ;
+              }
+            }else{
+              printf("Arguments are too few\n");
+            }
+          }else{
+            int ret=chdir(ecmd->argv[1]);
+            if(ret+1){
+              //ganti path (cd target)
+              if(ecmd->argv[1][0]=='/')
+                strcat(path,ecmd->argv[1]);
+              else{
+                strcat(path,"/");
+                strcat(path,ecmd->argv[1]);
+              }
+            }else{
+              printf("Nothing directory name %s\n",ecmd->argv[1] );
+            }
+          }
+      }else{
+        int level=counting(path,strlen(path),'/');
+        while(level--){
+          chdir("..");
+        }
+        memset(path,0,1);
+        strcat(path,rootpath);
+        //ganti path (cd)
+      }
+      
+    }else
+      process_line(buf);    
   }
 }
 
