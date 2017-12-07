@@ -79,11 +79,18 @@ static void (*handlers[])(char*) = {
 };
 
 int counting(char *input, int n, char s){
+  //menghitung level current directory
   int counter=0;
   while(n--){
     if(*(input++)==s) counter++;
   }
   return counter;
+}
+
+void pathback(char *input){
+  //Berguna untuk menghilangkan folder terakhir
+  char *point=strrchr(input,'/');
+  input[point-input]=(int)NULL;
 }
 
 void builtin_cd(char* buffer)
