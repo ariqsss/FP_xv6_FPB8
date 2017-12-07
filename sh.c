@@ -14,6 +14,8 @@
 
 #define MAXARGS 10
 
+static const char *rootpath = "marde@mardefasma:";
+
 struct cmd {
   int type;
 };
