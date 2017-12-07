@@ -78,6 +78,14 @@ static void (*handlers[])(char*) = {
 #undef X
 };
 
+int counting(char *input, int n, char s){
+  int counter=0;
+  while(n--){
+    if(*(input++)==s) counter++;
+  }
+  return counter;
+}
+
 void builtin_cd(char* buffer)
 {
   // Clumsy but will have to do for now.
