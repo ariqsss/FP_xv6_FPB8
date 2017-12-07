@@ -1,0 +1,110 @@
+xv6...
+cpu1: starting
+cpu0: starting
+[init] executing rc.local
+
+Welcome to Xv6!TERM I K I R
+[init] starting shell
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+marde@mardefasma:$ cd etc
+marde@mardefasma:/etc$ ls
+.              1 5 64
+..             1 1 512
+opt            1 17 32
+rc.local       2 81 86
+marde@mardefasma:/etc$ cd /opt
+marde@mardefasma:/etc/opt$ ls
+.              1 10 32
+..             1 1 512
+marde@mardefasma:/etc/opt$ cd ..
+marde@mardefasma:/etc$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+marde@mardefasma:/etc$ cd etc
+marde@mardefasma:/etc/etc$ cd
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+marde@mardefasma:$ cd /etc/opt
+marde@mardefasma:/etc/opt$ cd    ls
+.              1 17 32
+..             1 5 64
+marde@mardefasma:/etc/opt$ cd ..
+marde@mardefasma:/etc$ ls
+.              1 5 64
+..             1 1 512
+opt            1 17 32
+rc.local       2 81 86
+marde@mardefasma:/etc$ cd ..
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+marde@mardefasma:$ cd ..
+Current directory is directory root
+marde@mardefasma:$ cd fasma
+Nothing directory name fasma
+marde@mardefasma:$ cd /fasma
+Nothing directory name /fasma
+marde@mardefasma:$ 
