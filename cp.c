@@ -213,7 +213,7 @@ void recursive(char *path){
 
                         printf(1,"writing %s\n",target_str);
 
-		/*	chdir(path);
+			chdir(path);
 			int fd0,fd1;
 			if ((fd0=open(temp,O_RDONLY)) < 0 ) {
 			printf(1,"Cannot open file %s-\n",temp);
@@ -228,7 +228,9 @@ void recursive(char *path){
 			}
 			close(fd1);
 			close(fd0);
-			chdir("..");*/
+			close(n);
+
+			chdir("..");
 		}
 	 }
 	} //end while
