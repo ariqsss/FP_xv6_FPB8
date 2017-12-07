@@ -1,0 +1,124 @@
+xv6...
+cpu1: starting
+cpu0: starting
+[init] executing rc.local
+
+Welcome to Xv6!TERM I K I R
+[init] starting shell
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+marde@mardefasma:$ base64 MA an
+TWFu
+marde@mardefasma:$ base64 Akbar_Noto
+QWtiYXJfTm90bw==
+marde@mardefasma:$ base64 -d TWf Fu
+Man
+marde@mardefasma:$ base64 QWtiYXJfTm90bw==
+UVd0aVlYSmZUbTkwYnc9PQ==
+marde@mardefasma:$ ? base 64 -d QWtiYXJfTm90bw==
+exec /usr/local/bin/base failed
+marde@mardefasma:$ base64 -f d QWtiYXJfTm90bw==
+Akbar_Noto
+marde@mardefasma:$ echo Ariq_Sub dibyo >> input.in
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+input.in       2 85 12
+marde@mardefasma:$ base64 -f input.in
+QXJpcV9TdWRpYnlv
+marde@mardefasma:$ base  64 -f Marde_Fasma >> out                     Marde_fasma >> padded.i in
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 64
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+input.in       2 85 12
+padded.in      2 86 17
+marde@mardefasma:$ cd etc
+marde@mardefasma:/etc$ ls
+.              1 5 64
+..             1 1 512
+opt            1 17 32
+rc.local       2 81 86
+marde@mardefasma:/etc$ base64 SisOp2016 7 >> padded.in   1.in
+marde@mardefasma:/etc$ ls
+.              1 5 80
+..             1 1 512
+opt            1 17 32
+rc.local       2 81 86
+padded1.in     2 87 13
+marde@mardefasma:/etc$ bs  cat SisOp2017
+cat: cannot open SisOp2017
+marde@mardefasma:/etc$ base64 -f  -d -f Si               cat padded1.in
+U2lzT3AyMDE3
+marde@mardefasma:/etc$ base  64 -d -f padded1.in
+SisOp2017
+marde@mardefasma:/etc$ base64 -d -d f p              cd
+marde@mardefasma:$ ls
+.              1 1 512
+..             1 1 512
+bin            1 2 592
+boot           1 3 32
+dev            1 4 112
+etc            1 5 80
+home           1 6 32
+lib            1 7 32
+media          1 8 32
+mnt            1 9 32
+opt            1 10 32
+root           1 11 32
+sbin           1 12 64
+srv            1 13 32
+tmp            1 14 32
+usr            1 15 112
+var            1 16 176
+input.in       2 85 12
+padded.in      2 86 17
+marde@mardefasma:$ base64 -d -f padded.in >> output.out
+marde@mardefasma:$ cat output.out
+Marde_fasma
+marde@mardefasma:$ 
