@@ -6,9 +6,9 @@ int main(int argc, char *argv[]){
 if (argc==2){
 	int sleep_sec;
 	sleep_sec = atoi(argv[1]);
-	sleep(sleep_sec);
+	sleep(sleep_sec*60);
 
-printf(1,"%d Succeed\n",sleep_sec);
+//printf(1,"%d Succeed\n",sleep_sec);
 }
 exit();
 }
